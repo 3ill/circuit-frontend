@@ -1,7 +1,6 @@
 'use client';
 
 import { Input } from './ui/input';
-import { create } from 'ipfs-http-client';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
@@ -10,7 +9,7 @@ import { getAccount } from 'wagmi/actions';
 import { isMember } from '../app/utils/isMember';
 import { addMember } from '@/app/utils/addMember';
 
-const ipfs = create({ url: 'https://ipfs.infura.io:5001/api/v0' });
+// const ipfs = create({ url: 'https://ipfs.infura.io:5001/api/v0' });
 
 const InputForm = () => {
   const { address } = getAccount();
@@ -124,7 +123,7 @@ const InputForm = () => {
               <Input
                 type="file"
                 // required
-                onChange={(e) => setImage(e.target.files[0])}
+                // onChange={(e) => setImage(e.target.files[0])}
                 className="bg-grey-200 !ring-0 !ring-offset-0  h-fit border-0 p-2 lg:w-[450px] md:w-[350px] max-xs:w-[250px] lg:h-[50px] placeholder:text-white-800 "
               />
             </div>
