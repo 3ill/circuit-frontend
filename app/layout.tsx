@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import ContextProvider from '@/context/active-section-context';
 
 export const metadata: Metadata = {
   title: 'Circuit',
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-black-100 font-poppins">{children}</body>
+      <body className="min-h-screen bg-black-100 font-poppins">
+        <ContextProvider>{children}</ContextProvider>
+      </body>
     </html>
   );
 }
