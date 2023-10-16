@@ -1,7 +1,11 @@
 'use client';
-
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { useActiveSectionContext } from '@/context/active-section-context';
+import {
+  useHandleFilter,
+  useHandleEventClicked,
+  useInContractAPI,
+} from '@/lib/hooks';
 import Image from 'next/image';
 import { activeProposals, secondaryNav } from '@/constants';
 import { proposals } from '@/constants';
@@ -14,153 +18,33 @@ import MemberCard from '@/components/MemberCard';
 import ApprovedCard from '@/components/ApprovedCard';
 import ActiveCard from '@/components/ActiveCard';
 import EventsCard from '@/components/EventsCard';
-import { getBalance } from '@/utils/getBalance';
-import { getMemberCount } from '@/utils/memberCount';
-import { getAdminCount } from '@/utils/adminMemberCounter';
-import { getCouncilCount } from '@/utils/councilMemberCounter';
-import { getProposalCount } from '@/utils/proposalsCounter';
-import { getApprovedProposalCount } from '@/utils/approvedProposalCount';
-import { getRejectedProposalCount } from '@/utils/rejectedProposalCount';
 
 const Page = () => {
-  const [active, setActive] = useState('');
-  const [activeClicked, setIsActiveClicked] = useState(false);
-  const [approvedClicked, setIsApprovedClick] = useState(false);
-  const [memberClicked, setIsMemberClicked] = useState(false);
-  const [transactionClicked, setIsTransactionClicked] = useState(false);
-  const [eventClicked, setIsEventClicked] = useState(false);
-  const [balance, setBalance] = useState<string | null>(null);
-  const [memberCount, setMemberCount] = useState<number>(0);
-  const [adminCount, setAdminCount] = useState<number>(0);
-  const [councilCount, setCouncilCount] = useState<number>(0);
-  const [proposalCount, setProposalCount] = useState<number>(0);
-  const [approvedProposalCount, setApprovedProposalCount] = useState<number>(0);
-  const [rejectedProposalCount, setRejectedProposalCount] = useState<number>(0);
-  const contractAddress =
-    process.env.CONTRACT_ADDRESS ||
-    '0x3b1b947DFdc8f6100737Bc367c72E3a7380B9e87';
+  const {
+    balance,
+    active,
+    eventClicked,
+    transactionClicked,
+    activeClicked,
+    approvedClicked,
+    memberClicked,
+    councilCount,
+    adminCount,
+    memberCount,
+    proposalCount,
+    approvedProposalCount,
+    rejectedProposalCount,
+  } = useActiveSectionContext();
 
-  const handleFilter = (link: string) => {
-    setActive(link);
-    console.log(link);
-
-    if (link === 'Active') {
-      setIsActiveClicked((prevIsActiveClicked) => !prevIsActiveClicked);
-      setIsApprovedClick(false);
-      setIsMemberClicked(false);
-      setIsTransactionClicked(false);
-    } else if (link === 'Approved') {
-      setIsApprovedClick((prevIsApprovedClicked) => !prevIsApprovedClicked);
-      setIsActiveClicked(false);
-      setIsMemberClicked(false);
-      setIsTransactionClicked(false);
-    } else if (link === 'Members') {
-      setIsMemberClicked((prevIsMemberClicked) => !prevIsMemberClicked);
-      setIsActiveClicked(false);
-      setIsApprovedClick(false);
-      setIsTransactionClicked(false);
-    } else if (link === 'Transactions') {
-      setIsTransactionClicked(
-        (prevIsTransactionClicked) => !prevIsTransactionClicked
-      );
-      setIsActiveClicked(false);
-      setIsApprovedClick(false);
-      setIsMemberClicked(false);
-    }
+  const HandleFilter = (link: string) => {
+    useHandleFilter(link);
   };
 
-  const handleEventClicked = () => {
-    setIsEventClicked((prevIsEventClicked) => !prevIsEventClicked);
+  const HandleEventClicked = () => {
+    useHandleEventClicked();
   };
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        if (contractAddress) {
-          const contractBalance = await getBalance(contractAddress);
-          console.log(contractBalance);
-          setBalance(contractBalance ?? null);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchCount = async () => {
-      try {
-        const count = await getMemberCount();
-        if (count) {
-          console.log(count);
-          setMemberCount((count as number) ?? null);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchAdminCount = async () => {
-      try {
-        const admin = await getAdminCount();
-        if (admin) {
-          setAdminCount(admin as number);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchCouncilCount = async () => {
-      try {
-        const count = await getCouncilCount();
-        if (count) {
-          setCouncilCount(count as number);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchProposalCount = async () => {
-      try {
-        const count = await getProposalCount();
-        if (count) {
-          setProposalCount(count as number);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchApprovedProposalCount = async () => {
-      try {
-        const count = await getApprovedProposalCount();
-        if (count) {
-          setApprovedProposalCount(count as number);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchRejectedProposalCount = async () => {
-      try {
-        const count = await getRejectedProposalCount();
-        if (count) {
-          setRejectedProposalCount(count as number);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchBalance();
-    fetchCount();
-    fetchAdminCount();
-    fetchCouncilCount();
-    fetchProposalCount();
-    fetchApprovedProposalCount();
-    fetchRejectedProposalCount();
-  }, [contractAddress]);
+  useInContractAPI();
 
   return (
     <main className="flex-center paddings mx-auto w-full flex-col max-w-screen-2xl">
@@ -183,7 +67,7 @@ const Page = () => {
           {secondaryNav.map((nav: any) => (
             <div
               key={nav.name}
-              onClick={() => handleFilter(nav.name)}
+              onClick={() => HandleFilter(nav.link)}
               className={cn(
                 active === nav.name
                   ? 'frame bg-grey-200 shadow-sm'
@@ -216,7 +100,7 @@ const Page = () => {
               eventClicked ? 'frame bg-grey-200 shadow-sm' : ' bg-grey-100 ',
               'rounded-[15px] items-center p-2 flex flex-row gap-1 lg:hidden md:hidden'
             )}
-            onClick={handleEventClicked}
+            onClick={HandleEventClicked}
           >
             <Image
               src="/multiple-choice.png"

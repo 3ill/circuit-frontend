@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
-interface Props {
+type Props = {
   id: number;
   title: string;
   proposer: string;
@@ -14,7 +14,7 @@ interface Props {
   voteCount: number;
   time: string;
   state: number;
-}
+};
 
 const ProposalCard = ({
   id,
@@ -33,6 +33,7 @@ const ProposalCard = ({
   const handleActivity = (value: number) => {
     if (value === 0) {
       setActiveMessage('pending');
+      setIsActive(true);
     } else if (value === 1) {
       setActiveMessage('active');
       setIsActive(true);
@@ -46,10 +47,10 @@ const ProposalCard = ({
   }, [state]);
 
   return (
-    <section className="flex flex-col bg-black-400 lg:w-[800px] md:w-[450px]  h-fit max-xs:w-[350px]  rounded-[9px] mt-7 shadow-md ">
+    <section className=" group flex flex-col bg-black-400 lg:w-[800px] md:w-[450px]  h-fit max-xs:w-[350px]  rounded-[9px] mt-7 shadow-md hover:scale-110 max-xs:hover:scale-105 active:scale-110  transition z-50 ">
       <section className="mt-5 flex flex-row justify-between px-2 backdrop-blur-sm opacity-80 blur-[2%]">
         <div>
-          <h1 className="text-gradient_purple-blue font-lexend font-extrabold lg:text-[30px] md:text-[15px] max-xs:text-[13px]">
+          <h1 className="text-gradient_purple-blue font-lexend font-extrabold lg:text-[30px] md:text-[15px] max-xs:text-[13px] group-hover:scale-110 group-hover:translate-x-3 lg:group-hover:translate-x-5">
             {title}
           </h1>
         </div>
@@ -82,9 +83,9 @@ const ProposalCard = ({
         </h1>
       </section>
 
-      <section className="bg-black-300 mt-[55px] lg:mt-[150px] rounded-br-[9px] rounded-bl-[9px] px-2 py-2 shadow-md">
+      <section className="bg-black-300 mt-[55px] lg:mt-[150px] rounded-br-[9px] rounded-bl-[9px] px-2 py-3 shadow-md items-center">
         <div className="flex justify-between">
-          <div className="flex flex-row gap-3">
+          <div className="flex flex-row gap-3 py-2">
             <div className="flex flex-row gap-1">
               <p className="font-Azeret text-[12px] text-grey-200">Tier: </p>
               <p
@@ -101,7 +102,7 @@ const ProposalCard = ({
               </p>
             </div>
 
-            <div className="flex flex-row gap-1">
+            {/* <div className="flex flex-row gap-1">
               <p className="font-Azeret text-[12px] text-grey-200 ">Amount: </p>
               <p
                 className={cn(
@@ -115,10 +116,10 @@ const ProposalCard = ({
               >
                 {amount}
               </p>
-            </div>
+            </div> */}
 
             <div className="flex flex-row gap-1">
-              <p className="font-Azeret text-[12px] text-grey-200 ">Vote: </p>
+              <p className="font-Azeret text-[12px] text-grey-200 ">Votes: </p>
               <p
                 className={cn(
                   userTier == 'gold'
@@ -151,22 +152,31 @@ const ProposalCard = ({
             </div>
             <button
               className={cn(
-                isActive ? 'block' : 'hidden',
-                'flex flex-row gap-2 items-center shadow-md'
+                isActive
+                  ? 'block rounded-full bg-black-400 border border-gray-500/5 p-2'
+                  : 'hidden',
+                'flex flex-row gap-2 items-center shadow-md   '
               )}
             >
               <div>
                 <p
                   className={cn(
                     isActive ? 'block' : 'hidden',
-                    'font-lexend text-[12px] font-semibold capitalize text-green-400'
+                    'font-lexend text-[12px] font-semibold capitalize text-green-400 group-hover:scale-110'
                   )}
                 >
                   Vote
                 </p>
               </div>
               <div className={cn(isActive ? 'block' : 'hidden')}>
-                <Image src="/Thumbs Up.png" alt="vote" width={20} height={20} />
+                <Image
+                  src="/Thumbs Up.png"
+                  alt="vote"
+                  width={20}
+                  height={20}
+                  quality={95}
+                  className="group-hover:scale-110 active:scale-105 transition"
+                />
               </div>
             </button>
           </div>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { MobileSideBar } from './Mobile-sidebar';
-import { Button } from './ui/button';
+
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import {
   wagmiConfig,
@@ -31,9 +31,6 @@ const HomeNav = () => {
 
             <div className="flex justify-end max-xs:w-[130px] text-white items-center">
               <ConnectButton chainStatus="none" />
-              {/* <Button className="bg-grey-200 font-Azeret max-xs:text-[13px]">
-              Connect Wallet
-            </Button> */}
             </div>
           </section>
         </nav>

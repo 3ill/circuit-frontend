@@ -10,7 +10,9 @@ const Navbar = () => {
           <Image src="/logo.png" alt="logo" width={60} height={60} />
         </Link>
         <Link href="/member" className="text-white">
-          <Button className="bg-grey-200">Get Started</Button>
+          <Button className="bg-grey-200 hover:scale-110 active:scale-105 transition hover:bg-purple ">
+            Get Started
+          </Button>
         </Link>
       </section>
     </nav>

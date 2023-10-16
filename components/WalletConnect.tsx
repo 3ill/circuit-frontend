@@ -22,7 +22,7 @@ const { chains, publicClient } = configureChains(
 const projectId = 'ee4b286452c7ab971c5e7013b5b3f755';
 
 const { connectors } = getDefaultWallets({
-  appName: 'My RainbowKit App',
+  appName: 'CIRCUIT',
   projectId,
   chains,
 });
