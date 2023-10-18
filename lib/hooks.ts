@@ -8,47 +8,7 @@ import { getCouncilCount } from '@/utils/councilMemberCounter'
 import { getProposalCount } from '@/utils/proposalsCounter'
 import { getApprovedProposalCount } from '@/utils/approvedProposalCount'
 import { getRejectedProposalCount } from '@/utils/rejectedProposalCount'
-
-export const useHandleFilter = (link: string) => {
-  const {
-    setActive,
-    setIsActiveClicked,
-    setIsApprovedClick,
-    setIsMemberClicked,
-    setIsTransactionClicked,
-  } = useActiveSectionContext()
-  setActive(link)
-  console.log(link)
-
-  if (link === 'Active') {
-    setIsActiveClicked((prevIsActiveClicked) => !prevIsActiveClicked)
-    setIsApprovedClick(false)
-    setIsMemberClicked(false)
-    setIsTransactionClicked(false)
-  } else if (link === 'Approved') {
-    setIsApprovedClick((prevIsApprovedClicked) => !prevIsApprovedClicked)
-    setIsActiveClicked(false)
-    setIsMemberClicked(false)
-    setIsTransactionClicked(false)
-  } else if (link === 'Members') {
-    setIsMemberClicked((prevIsMemberClicked) => !prevIsMemberClicked)
-    setIsActiveClicked(false)
-    setIsApprovedClick(false)
-    setIsTransactionClicked(false)
-  } else if (link === 'Transactions') {
-    setIsTransactionClicked(
-      (prevIsTransactionClicked) => !prevIsTransactionClicked,
-    )
-    setIsActiveClicked(false)
-    setIsApprovedClick(false)
-    setIsMemberClicked(false)
-  }
-}
-
-export const useHandleEventClicked = () => {
-  const { setIsEventClicked } = useActiveSectionContext()
-  setIsEventClicked((prevIsEventClicked) => !prevIsEventClicked)
-}
+import { getAllProposals } from '@/utils'
 
 export const useInContractAPI = () => {
   const {
