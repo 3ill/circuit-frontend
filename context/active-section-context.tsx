@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
+import type { ProposalProps } from '@/lib/types';
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -33,6 +34,8 @@ type ContextValueProps = {
   setApprovedProposalCount: React.Dispatch<React.SetStateAction<number>>;
   rejectedProposalCount: number;
   setRejectedProposalCount: React.Dispatch<React.SetStateAction<number>>;
+  proposals: ProposalProps[];
+  setProposals: React.Dispatch<React.SetStateAction<ProposalProps[]>>;
 };
 
 const ActiveSectionContext = createContext<ContextValueProps | null>(null);
@@ -56,6 +59,8 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
 
   const [approvedProposalCount, setApprovedProposalCount] = useState(0);
   const [rejectedProposalCount, setRejectedProposalCount] = useState(0);
+
+  const [proposals, setProposals] = useState<ProposalProps[]>([]);
   return (
     <ActiveSectionContext.Provider
       value={{
@@ -85,6 +90,8 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
         setApprovedProposalCount,
         rejectedProposalCount,
         setRejectedProposalCount,
+        proposals,
+        setProposals,
       }}
     >
       {children}
