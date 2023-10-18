@@ -1,11 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
 import { useActiveSectionContext } from '@/context/active-section-context';
-import {
-  useHandleFilter,
-  useHandleEventClicked,
-  useInContractAPI,
-} from '@/lib/hooks';
+import { useInContractAPI } from '@/lib/hooks';
 import Image from 'next/image';
 import { activeProposals, secondaryNav } from '@/constants';
 import { proposals } from '@/constants';
@@ -32,16 +28,47 @@ const Page = () => {
     adminCount,
     memberCount,
     proposalCount,
+    setActive,
+    setIsActiveClicked,
+    setIsApprovedClick,
+    setIsMemberClicked,
+    setIsTransactionClicked,
+    setIsEventClicked,
     approvedProposalCount,
     rejectedProposalCount,
   } = useActiveSectionContext();
 
-  const HandleFilter = (link: string) => {
-    useHandleFilter(link);
+  const handleFilter = (link: string) => {
+    setActive(link);
+    console.log(link);
+
+    if (link === 'Active') {
+      setIsActiveClicked((prevIsActiveClicked) => !prevIsActiveClicked);
+      setIsApprovedClick(false);
+      setIsMemberClicked(false);
+      setIsTransactionClicked(false);
+    } else if (link === 'Approved') {
+      setIsApprovedClick((prevIsApprovedClicked) => !prevIsApprovedClicked);
+      setIsActiveClicked(false);
+      setIsMemberClicked(false);
+      setIsTransactionClicked(false);
+    } else if (link === 'Members') {
+      setIsMemberClicked((prevIsMemberClicked) => !prevIsMemberClicked);
+      setIsActiveClicked(false);
+      setIsApprovedClick(false);
+      setIsTransactionClicked(false);
+    } else if (link === 'Transactions') {
+      setIsTransactionClicked(
+        (prevIsTransactionClicked) => !prevIsTransactionClicked
+      );
+      setIsActiveClicked(false);
+      setIsApprovedClick(false);
+      setIsMemberClicked(false);
+    }
   };
 
   const HandleEventClicked = () => {
-    useHandleEventClicked();
+    setIsEventClicked((prevIsEventClicked) => !prevIsEventClicked);
   };
 
   useInContractAPI();
@@ -67,7 +94,9 @@ const Page = () => {
           {secondaryNav.map((nav: any) => (
             <div
               key={nav.name}
-              onClick={() => HandleFilter(nav.link)}
+              onClick={() => {
+                handleFilter(nav.name);
+              }}
               className={cn(
                 active === nav.name
                   ? 'frame bg-grey-200 shadow-sm'
