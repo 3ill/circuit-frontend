@@ -1,3 +1,4 @@
+'use client'
 import { useEffect } from 'react'
 import { useActiveSectionContext } from '@/context/active-section-context'
 import { contract_address } from '@/utils/keys'
@@ -9,6 +10,7 @@ import { getProposalCount } from '@/utils/proposalsCounter'
 import { getApprovedProposalCount } from '@/utils/approvedProposalCount'
 import { getRejectedProposalCount } from '@/utils/rejectedProposalCount'
 import { getAllProposals } from '@/utils'
+import type { ProposalProps } from './types'
 
 export const useInContractAPI = () => {
   const {
@@ -16,6 +18,7 @@ export const useInContractAPI = () => {
     setMemberCount,
     setAdminCount,
     setCouncilCount,
+    setAllProposals,
     setProposalCount,
     setApprovedProposalCount,
     setRejectedProposalCount,
@@ -101,13 +104,32 @@ export const useInContractAPI = () => {
       }
     }
 
-    fetchBalance()
-    fetchCount()
-    fetchAdminCount()
-    fetchCouncilCount()
-    fetchProposalCount()
-    fetchApprovedProposalCount()
-    fetchRejectedProposalCount()
+    const fetchAllProposals = async () => {
+      try {
+        const fetchedProposals: ProposalProps[] = await getAllProposals()
+        setAllProposals(fetchedProposals)
+      } catch (error) {
+        throw error
+      }
+    }
+
+    const fetchAllData = async () => {
+      fetchBalance()
+      fetchCount()
+      fetchAdminCount()
+      fetchCouncilCount()
+      fetchProposalCount()
+      fetchApprovedProposalCount()
+      fetchRejectedProposalCount()
+      fetchAllProposals()
+    }
+
+    fetchAllData()
+
+    const fetchAllDataInterval = setInterval(fetchAllData, 300000)
+    return () => {
+      clearInterval(fetchAllDataInterval)
+    }
   }, [
     setBalance,
     setAdminCount,
@@ -116,5 +138,42 @@ export const useInContractAPI = () => {
     setProposalCount,
     setApprovedProposalCount,
     setRejectedProposalCount,
+    setAllProposals,
   ])
+}
+
+export const HandleFilter = (link: string) => {
+  const {
+    setActive,
+    setIsActiveClicked,
+    setIsApprovedClick,
+    setIsMemberClicked,
+    setIsTransactionClicked,
+  } = useActiveSectionContext()
+  setActive(link)
+  console.log(link)
+
+  if (link === 'Active') {
+    setIsActiveClicked((prevIsActiveClicked) => !prevIsActiveClicked)
+    setIsApprovedClick(false)
+    setIsMemberClicked(false)
+    setIsTransactionClicked(false)
+  } else if (link === 'Approved') {
+    setIsApprovedClick((prevIsApprovedClicked) => !prevIsApprovedClicked)
+    setIsActiveClicked(false)
+    setIsMemberClicked(false)
+    setIsTransactionClicked(false)
+  } else if (link === 'Members') {
+    setIsMemberClicked((prevIsMemberClicked) => !prevIsMemberClicked)
+    setIsActiveClicked(false)
+    setIsApprovedClick(false)
+    setIsTransactionClicked(false)
+  } else if (link === 'Transactions') {
+    setIsTransactionClicked(
+      (prevIsTransactionClicked) => !prevIsTransactionClicked,
+    )
+    setIsActiveClicked(false)
+    setIsApprovedClick(false)
+    setIsMemberClicked(false)
+  }
 }
