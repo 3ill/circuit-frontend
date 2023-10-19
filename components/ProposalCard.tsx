@@ -3,48 +3,43 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-
-type Props = {
-  id: number;
-  title: string;
-  proposer: string;
-  description: string;
-  userTier: string;
-  amount: number;
-  voteCount: number;
-  time: string;
-  state: number;
-};
+import type { ProposalProps } from '@/lib/types';
+import { useActiveSectionContext } from '@/context/active-section-context';
 
 const ProposalCard = ({
   id,
   title,
   proposer,
   description,
-  userTier,
-  amount,
+  voters,
   voteCount,
   time,
-  state,
-}: Props) => {
-  const [activeMessage, setActiveMessage] = useState('');
-  const [isActive, setIsActive] = useState(false);
+  proposalState,
+  decision,
+}: ProposalProps) => {
+  const { isActive, setIsActive, activeMessage, setActiveMessage } =
+    useActiveSectionContext();
 
-  const handleActivity = (value: number) => {
-    if (value === 0) {
-      setActiveMessage('pending');
-      setIsActive(true);
-    } else if (value === 1) {
-      setActiveMessage('active');
-      setIsActive(true);
-    } else if (value === 2) {
-      setActiveMessage('expired');
-    }
-  };
+  const formattedId = id ? parseInt(id._hex, 16) : 0;
+  const newVoteCount = voteCount ? parseInt(voteCount._hex, 16) : 0;
+  const newProposalState = proposalState ? parseInt(proposalState._hex) : 0;
+  const newDecision = decision ? parseInt(decision._hex, 16) : 0;
+  const newTime = time ? parseInt(time._hex, 16) : 0;
 
   useEffect(() => {
-    handleActivity(state);
-  }, [state]);
+    const handleActivity = (value: number) => {
+      if (value === 0) {
+        setActiveMessage('pending');
+        setIsActive(true);
+      } else if (value === 1) {
+        setActiveMessage('active');
+        setIsActive(true);
+      } else if (value === 2) {
+        setActiveMessage('expired');
+      }
+    };
+    handleActivity(newProposalState);
+  }, [newProposalState, setActiveMessage, setIsActive]);
 
   return (
     <section className=" group flex flex-col bg-black-400 lg:w-[800px] md:w-[450px]  h-fit max-xs:w-[350px]  rounded-[9px] mt-7 shadow-md hover:scale-110 max-xs:hover:scale-105 active:scale-110  transition z-50 ">
@@ -60,7 +55,7 @@ const ProposalCard = ({
             Timestamp
           </p>
           <h3 className="font-Azeret font-bold text-red-700 lg:text-[30px] md:text-[15px] max-xs:text-[13px]">
-            {time}
+            {newTime}
           </h3>
         </div>
       </section>
@@ -88,7 +83,7 @@ const ProposalCard = ({
           <div className="flex flex-row gap-3 py-2">
             <div className="flex flex-row gap-1">
               <p className="font-Azeret text-[12px] text-grey-200">Tier: </p>
-              <p
+              {/* <p
                 className={cn(
                   userTier == 'gold'
                     ? 'text-[#998C4A]'
@@ -99,7 +94,7 @@ const ProposalCard = ({
                 )}
               >
                 {userTier}
-              </p>
+              </p> */}
             </div>
 
             {/* <div className="flex flex-row gap-1">
@@ -122,15 +117,15 @@ const ProposalCard = ({
               <p className="font-Azeret text-[12px] text-grey-200 ">Votes: </p>
               <p
                 className={cn(
-                  userTier == 'gold'
-                    ? 'text-[#998C4A]'
-                    : userTier == 'silver'
-                    ? 'text-[#D1E8E2]'
-                    : 'text-[#664616]',
+                  // userTier == 'gold'
+                  //   ? 'text-[#998C4A]'
+                  //   // : userTier == 'silver'
+                  //   ? 'text-[#D1E8E2]'
+                  //   : 'text-[#664616]',
                   'font-lexend text-[12px] font-semibold capitalize'
                 )}
               >
-                {voteCount}
+                {newVoteCount}
               </p>
             </div>
           </div>
