@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import type { ProposalProps } from '@/lib/types';
 
 type ContextProviderProps = {
@@ -10,6 +10,10 @@ type ContextProviderProps = {
 type ContextValueProps = {
   active: string;
   setActive: React.Dispatch<React.SetStateAction<string>>;
+  isActive: boolean;
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
+  activeMessage: string;
+  setActiveMessage: React.Dispatch<React.SetStateAction<string>>;
   activeClicked: boolean;
   setIsActiveClicked: React.Dispatch<React.SetStateAction<boolean>>;
   approvedClicked: boolean;
@@ -34,14 +38,16 @@ type ContextValueProps = {
   setApprovedProposalCount: React.Dispatch<React.SetStateAction<number>>;
   rejectedProposalCount: number;
   setRejectedProposalCount: React.Dispatch<React.SetStateAction<number>>;
-  proposals: ProposalProps[];
-  setProposals: React.Dispatch<React.SetStateAction<ProposalProps[]>>;
+  allProposals: ProposalProps[];
+  setAllProposals: React.Dispatch<React.SetStateAction<ProposalProps[]>>;
 };
 
 const ActiveSectionContext = createContext<ContextValueProps | null>(null);
 
 const ContextProvider = ({ children }: ContextProviderProps) => {
   const [active, setActive] = useState('');
+  const [activeMessage, setActiveMessage] = useState('');
+  const [isActive, setIsActive] = useState(false);
   const [activeClicked, setIsActiveClicked] = useState(false);
   const [approvedClicked, setIsApprovedClick] = useState(false);
 
@@ -60,12 +66,16 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
   const [approvedProposalCount, setApprovedProposalCount] = useState(0);
   const [rejectedProposalCount, setRejectedProposalCount] = useState(0);
 
-  const [proposals, setProposals] = useState<ProposalProps[]>([]);
+  const [allProposals, setAllProposals] = useState<ProposalProps[]>([]);
   return (
     <ActiveSectionContext.Provider
       value={{
         active,
         setActive,
+        isActive,
+        setIsActive,
+        activeMessage,
+        setActiveMessage,
         activeClicked,
         setIsActiveClicked,
         approvedClicked,
@@ -90,8 +100,8 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
         setApprovedProposalCount,
         rejectedProposalCount,
         setRejectedProposalCount,
-        proposals,
-        setProposals,
+        allProposals,
+        setAllProposals,
       }}
     >
       {children}
