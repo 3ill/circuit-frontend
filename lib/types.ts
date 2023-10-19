@@ -1,11 +1,11 @@
 export type ProposalProps = {
-  id: number
+  id: any
   proposer: string
   title: string
   description: string
-  voteCount: number
+  voteCount: any
   voters: []
-  proposalState: number
-  decision: number
-  time: number
+  proposalState: any
+  decision: any
+  time: any
 }
