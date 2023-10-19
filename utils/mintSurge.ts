@@ -6,10 +6,10 @@ type MintSurgeProps = {
   value: number
 }
 
-const provider = new ethers.providers.Web3Provider(window.ethereum)
-const signer = provider.getSigner()
 export const mintSurge = async ({ value }: MintSurgeProps) => {
   if (typeof window !== 'undefined' && window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
     const circuit = new ethers.Contract(contract_address, abi, signer)
     try {
       const mint = await circuit.mintSurge(value)
