@@ -1,10 +1,11 @@
 'use client';
+
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { useActiveSectionContext } from '@/context/active-section-context';
 import { useInContractAPI } from '@/lib/hooks';
 import Image from 'next/image';
 import { activeProposals, secondaryNav } from '@/constants';
-import { proposals } from '@/constants';
 import { member } from '@/constants';
 import { approvedProposals } from '@/constants';
 import { contractEvents } from '@/constants';
@@ -34,6 +35,7 @@ const Page = () => {
     setIsMemberClicked,
     setIsTransactionClicked,
     setIsEventClicked,
+    allProposals,
     approvedProposalCount,
     rejectedProposalCount,
   } = useActiveSectionContext();
@@ -74,7 +76,7 @@ const Page = () => {
   useInContractAPI();
 
   return (
-    <main className="flex-center paddings mx-auto w-full flex-col max-w-screen-2xl">
+    <main className="flex-center paddings mx-auto w-full flex-col max-w-screen-2xl mb-[1500px]">
       <section className="nav-padding">
         <div className="flex absolute right-6 top-[110px] justify-end items-center">
           <div className="flex flex-col gap-1 items-center group hover:scale-110 transition">
@@ -143,13 +145,13 @@ const Page = () => {
         {transactionClicked && (
           <div className="flex-center flex-col mt-5">
             {contractEvents.map((events: any) => (
-              <div key={events.title}>
+              <React.Fragment key={events.title}>
                 <EventsCard
                   title={events.title}
                   address={events.address}
                   description={events.description}
                 />
-              </div>
+              </React.Fragment>
             ))}
           </div>
         )}
@@ -157,7 +159,7 @@ const Page = () => {
         {activeClicked && (
           <div className="flex-center flex-col mt-5">
             {activeProposals.map((proposal: any) => (
-              <div key={proposal.id}>
+              <React.Fragment key={proposal.id}>
                 <ActiveCard
                   id={proposal.id}
                   title={proposal.title}
@@ -168,7 +170,7 @@ const Page = () => {
                   voteCount={proposal.voteCount}
                   time={proposal.time}
                 />
-              </div>
+              </React.Fragment>
             ))}
           </div>
         )}
@@ -176,7 +178,7 @@ const Page = () => {
         {approvedClicked && (
           <div className="flex-center flex-col mt-5">
             {approvedProposals.map((proposal: any) => (
-              <div key={proposal.id}>
+              <React.Fragment key={proposal.id}>
                 <ApprovedCard
                   id={proposal.id}
                   title={proposal.title}
@@ -187,7 +189,7 @@ const Page = () => {
                   voteCount={proposal.voteCount}
                   time={proposal.time}
                 />
-              </div>
+              </React.Fragment>
             ))}
           </div>
         )}
@@ -195,7 +197,7 @@ const Page = () => {
         {memberClicked && (
           <div className="flex-center flex-col mt-5">
             {member.map((user: any) => (
-              <div key={user.id}>
+              <React.Fragment key={user.id}>
                 <MemberCard
                   id={user.id}
                   username={user.username}
@@ -208,7 +210,7 @@ const Page = () => {
                   isAdmin={user.isAdmin}
                   isCouncilMember={user.isCouncilMember}
                 />
-              </div>
+              </React.Fragment>
             ))}
           </div>
         )}
@@ -233,20 +235,20 @@ const Page = () => {
             !memberClicked &&
             !transactionClicked && (
               <div className="no-scrollbar">
-                {proposals.map((proposal: any) => (
-                  <div key={proposal.id}>
+                {allProposals.map((proposal: any, index) => (
+                  <React.Fragment key={proposal.id}>
                     <ProposalCard
                       id={proposal.id}
                       title={proposal.title}
                       proposer={proposal.proposer}
                       description={proposal.description}
-                      userTier={proposal.userTier}
-                      amount={proposal.amount}
+                      decision={proposal.decision}
+                      voters={proposal.voters}
                       voteCount={proposal.voteCount}
                       time={proposal.time}
-                      state={proposal.state}
+                      proposalState={proposal.state}
                     />
-                  </div>
+                  </React.Fragment>
                 ))}
               </div>
             )}
