@@ -48,20 +48,28 @@ const InputForm = () => {
   useEffect(() => {
     const handleCheckIsMember = async () => {
       if (typeof window !== 'undefined' && window.ethereum) {
-        const isMemberResult = await isMember({
-          memberAddress: address as string,
-        });
-        console.log(isMemberResult);
-        if (isMemberResult === 'Already a member') {
-          router.push('/home');
+        try {
+          await window.ethereum.enable();
+
+          const isMemberResult = await isMember({
+            memberAddress: address as string,
+          });
+
+          if (isMemberResult === 'Already a member') {
+            router.push('home');
+          }
+        } catch (error) {
+          setFeedback('User denied access to MetaMask.');
+          console.error(error);
         }
       } else {
-        setFeedback('Connect Wallet to proceed');
+        setFeedback('MetaMask not available. Please install it.');
+        console.log(feedback);
       }
     };
 
     handleCheckIsMember();
-  }, [address, router]);
+  }, [address, feedback, router]);
 
   console.log(address);
 
